@@ -19,6 +19,9 @@ const app = express();
 // helmet sets secure HTTP headers (CSP, HSTS, X-Frame-Options, etc.)
 app.use(helmet());
 
+// Trust Render's proxy (fixes ERR_ERL_UNEXPECTED_X_FORWARDED_FOR)
+app.set("trust proxy", 1);
+
 // Sanitize user input against NoSQL injection: strips $ and . from req.body/params/query
 app.use(mongoSanitize());
 
