@@ -5,7 +5,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
@@ -71,8 +71,7 @@ export function PostCard({ post, onComment }: Props) {
         <CardContent sx={{ p: { xs: 2, sm: 2.5 } }}>
           <Stack direction="row" spacing={1.5} alignItems="center">
             <Link
-              to="/profile/$username"
-              params={{ username: post.author.username }}
+              to={`/profile/${post.author.username}`}
               style={{ textDecoration: "none" }}
             >
               <UserAvatar src={post.author.avatar} name={post.author.name} size={44} />
@@ -80,8 +79,7 @@ export function PostCard({ post, onComment }: Props) {
             <Box sx={{ flex: 1, minWidth: 0 }}>
               <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: "wrap" }}>
                 <Link
-                  to="/profile/$username"
-                  params={{ username: post.author.username }}
+                  to={`/profile/${post.author.username}`}
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <Typography variant="subtitle1" fontWeight={800} sx={{ lineHeight: 1.2 }}>

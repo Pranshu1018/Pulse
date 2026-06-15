@@ -1,5 +1,5 @@
 import { Card, Box, Stack, Typography, Button, Divider } from "@mui/material";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { useAuth } from "../../context/AuthContext";
 import { userStats } from "../../services/users";
@@ -41,11 +41,7 @@ export function LeftProfileCard() {
       </Stack>
       <Divider />
       <Box sx={{ p: 2 }}>
-        <Link
-          to="/profile/$username"
-          params={{ username: user.username }}
-          style={{ textDecoration: "none" }}
-        >
+        <Link to={`/profile/${user.username}`} style={{ textDecoration: "none" }}>
           <Button fullWidth variant="outlined">
             View your profile
           </Button>

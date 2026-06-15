@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { Box, Stack, Chip, Typography } from "@mui/material";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -11,11 +10,6 @@ import { EmptyState } from "../components/EmptyState/EmptyState";
 import { PageTransition } from "../components/Motion/PageTransition";
 import { listFeed, type EnrichedPost, type FeedFilter } from "../services/posts";
 
-export const Route = createFileRoute("/_app/feed")({
-  head: () => ({ meta: [{ title: "Feed · Social Spark" }, { name: "description", content: "Your social feed." }] }),
-  component: FeedPage,
-});
-
 const FILTERS: { value: FeedFilter; label: string }[] = [
   { value: "all", label: "All" },
   { value: "for-you", label: "For You" },
@@ -23,7 +17,7 @@ const FILTERS: { value: FeedFilter; label: string }[] = [
   { value: "most-commented", label: "Most Commented" },
 ];
 
-function FeedPage() {
+export function FeedPage() {
   const [filter, setFilter] = useState<FeedFilter>("all");
   const [active, setActive] = useState<EnrichedPost | null>(null);
 
@@ -32,8 +26,9 @@ function FeedPage() {
     queryFn: () => listFeed(filter),
   });
 
-  // Keep modal in sync with refetched data
-  const activeLive = active && data?.find((p) => p.id === active.id) ? data.find((p) => p.id === active.id)! : active;
+  const activeLive = active && data?.find((p) => p.id === active.id)
+    ? data.find((p) => p.id === active.id)!
+    : active;
 
   return (
     <PageTransition>
@@ -64,11 +59,7 @@ function FeedPage() {
         {isLoading ? (
           <FeedSkeleton count={3} />
         ) : !data || data.length === 0 ? (
-          <EmptyState
-            icon="📰"
-            title="No posts yet"
-            description="When people you follow share something, it'll appear here."
-          />
+          <EmptyState icon="📰" title="No posts yet" description="Be the first to share something!" />
         ) : (
           <Stack spacing={2}>
             <AnimatePresence initial={false}>

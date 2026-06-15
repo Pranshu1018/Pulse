@@ -1,9 +1,7 @@
-import { createFileRoute, useParams, useNavigate } from "@tanstack/react-router";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import {
-  Card, Box, Stack, Typography, Button, Tabs, Tab, Divider,
-} from "@mui/material";
+import { Card, Box, Stack, Typography, Button, Tabs, Tab, Divider } from "@mui/material";
 import { AnimatePresence } from "framer-motion";
 import { UserAvatar } from "../components/UserAvatar/UserAvatar";
 import { PostCard } from "../components/PostCard/PostCard";
@@ -16,12 +14,8 @@ import { listPostsByUser, type EnrichedPost } from "../services/posts";
 import { useAuth } from "../context/AuthContext";
 import { useNotify } from "../app/SnackbarProvider";
 
-export const Route = createFileRoute("/_app/profile/$username")({
-  component: ProfilePage,
-});
-
-function ProfilePage() {
-  const { username } = useParams({ from: "/_app/profile/$username" });
+export function ProfilePage() {
+  const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
   const { user: me } = useAuth();
   const notify = useNotify();
@@ -31,8 +25,9 @@ function ProfilePage() {
 
   const userQ = useQuery({
     queryKey: ["user", username],
-    queryFn: () => getUserByUsername(username),
+    queryFn: () => getUserByUsername(username!),
   });
+
   const postsQ = useQuery({
     queryKey: ["userPosts", userQ.data?.id],
     queryFn: () => listPostsByUser(userQ.data!.id),
@@ -46,9 +41,7 @@ function ProfilePage() {
       queryClient.invalidateQueries({ queryKey: ["suggested"] });
       notify(data.isFollowing ? `Now following @${username}` : `Unfollowed @${username}`, "success");
     },
-    onError: (err: any) => {
-      notify(err.message || "Failed to update follow status", "error");
-    },
+    onError: (err: any) => notify(err.message || "Failed to update follow status", "error"),
   });
 
   if (userQ.isLoading) return <PageTransition><ProfileSkeleton /></PageTransition>;
@@ -60,20 +53,18 @@ function ProfilePage() {
           title="User not found"
           description="The profile you're looking for doesn't exist."
           actionLabel="Back to feed"
-          onAction={() => navigate({ to: "/feed" })}
+          onAction={() => navigate("/feed")}
         />
       </PageTransition>
     );
   }
 
   const u = userQ.data;
-  const stats = {
-    posts: u.postCount || 0,
-    likes: u.totalLikes || 0,
-    comments: u.totalComments || 0,
-  };
+  const stats = { posts: u.postCount || 0, likes: u.totalLikes || 0, comments: u.totalComments || 0 };
   const isMe = me?.id === u.id;
-  const activeLive = active && postsQ.data?.find((p) => p.id === active.id) ? postsQ.data.find((p) => p.id === active.id)! : active;
+  const activeLive = active && postsQ.data?.find((p) => p.id === active.id)
+    ? postsQ.data.find((p) => p.id === active.id)!
+    : active;
 
   return (
     <PageTransition>
@@ -99,7 +90,7 @@ function ProfilePage() {
                 ) : (
                   <>
                     <Button variant="outlined" onClick={() => notify("Chat coming soon", "warning")}>Message</Button>
-                    <Button 
+                    <Button
                       variant={u.isFollowing ? "outlined" : "contained"}
                       onClick={() => followMutation.mutate(u.id)}
                       disabled={followMutation.isPending}
@@ -110,9 +101,7 @@ function ProfilePage() {
                 )}
               </Stack>
             </Stack>
-
             <Typography sx={{ mt: 2 }}>{u.bio}</Typography>
-
             <Stack direction="row" spacing={3} sx={{ mt: 2 }} divider={<Divider orientation="vertical" flexItem />}>
               <Stat label="Posts" value={stats.posts} />
               <Stat label="Likes" value={stats.likes} />
@@ -129,15 +118,11 @@ function ProfilePage() {
           </Tabs>
         </Card>
 
-        {postsQ.isLoading ? (
-          <FeedSkeleton count={2} />
-        ) : tab === 0 ? (
+        {postsQ.isLoading ? <FeedSkeleton count={2} /> : tab === 0 ? (
           postsQ.data && postsQ.data.length > 0 ? (
             <Stack spacing={2}>
               <AnimatePresence>
-                {postsQ.data.map((p) => (
-                  <PostCard key={p.id} post={p} onComment={setActive} />
-                ))}
+                {postsQ.data.map((p) => <PostCard key={p.id} post={p} onComment={setActive} />)}
               </AnimatePresence>
             </Stack>
           ) : (
@@ -147,7 +132,6 @@ function ProfilePage() {
           <EmptyState icon="🚧" title="Coming soon" description="This tab is part of the next release." />
         )}
       </Stack>
-
       <CommentModal post={activeLive} onClose={() => setActive(null)} />
     </PageTransition>
   );

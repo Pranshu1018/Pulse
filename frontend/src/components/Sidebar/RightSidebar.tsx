@@ -1,7 +1,7 @@
 import { Card, Box, Stack, Typography, Button, Divider, Chip, CircularProgress } from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { useAuth } from "../../context/AuthContext";
 import { suggestedUsers, toggleFollow } from "../../services/users";
@@ -65,11 +65,11 @@ export function RightSidebar() {
           <Stack spacing={1.5}>
             {data.slice(0, 4).map((u) => (
               <Stack key={u.id} direction="row" alignItems="center" spacing={1.5}>
-                <Link to="/profile/$username" params={{ username: u.username }} style={{ textDecoration: "none" }}>
+                <Link to={`/profile/${u.username}`} style={{ textDecoration: "none" }}>
                   <UserAvatar src={u.avatar} name={u.name} size={40} />
                 </Link>
                 <Box sx={{ flex: 1, minWidth: 0 }}>
-                  <Link to="/profile/$username" params={{ username: u.username }} style={{ textDecoration: "none", color: "inherit" }}>
+                  <Link to={`/profile/${u.username}`} style={{ textDecoration: "none", color: "inherit" }}>
                     <Typography fontWeight={700} noWrap>{u.name}</Typography>
                     <Typography variant="caption" color="text.secondary" noWrap>@{u.username}</Typography>
                   </Link>

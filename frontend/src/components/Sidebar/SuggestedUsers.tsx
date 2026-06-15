@@ -1,6 +1,6 @@
 import { Card, Stack, Typography, Box, Button, CircularProgress } from "@mui/material";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { suggestedUsers, toggleFollow } from "../../services/users";
 import { useAuth } from "../../context/AuthContext";
@@ -47,15 +47,11 @@ export function SuggestedUsers() {
       <Stack spacing={2}>
         {users.map((u) => (
           <Stack key={u.id} direction="row" spacing={1.5} alignItems="center">
-            <Link to="/profile/$username" params={{ username: u.username }} style={{ flexShrink: 0 }}>
+            <Link to={`/profile/${u.username}`} style={{ flexShrink: 0 }}>
               <UserAvatar src={u.avatar} name={u.name} size={44} />
             </Link>
             <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Link
-                to="/profile/$username"
-                params={{ username: u.username }}
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
+              <Link to={`/profile/${u.username}`} style={{ textDecoration: "none", color: "inherit" }}>
                 <Typography fontWeight={700} fontSize={14} noWrap>{u.name}</Typography>
                 <Typography variant="caption" color="text.secondary" noWrap>
                   @{u.username}

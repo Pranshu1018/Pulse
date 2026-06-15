@@ -4,17 +4,17 @@ import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurned
 import PublicOutlinedIcon from "@mui/icons-material/PublicOutlined";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import { useNavigate, useRouterState } from "@tanstack/react-router";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 export function MobileBottomNav() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  const value = pathname.startsWith("/search")
+  const value = location.pathname.startsWith("/search")
     ? "search"
-    : pathname.startsWith("/profile")
+    : location.pathname.startsWith("/profile")
     ? "profile"
     : "feed";
 
@@ -35,10 +35,9 @@ export function MobileBottomNav() {
         showLabels
         sx={{ bgcolor: "background.paper", height: 64 }}
         onChange={(_, v) => {
-          if (v === "feed") navigate({ to: "/feed" });
-          else if (v === "search") navigate({ to: "/search", search: { q: "" } as never });
-          else if (v === "profile" && user)
-            navigate({ to: "/profile/$username", params: { username: user.username } });
+          if (v === "feed") navigate("/feed");
+          else if (v === "search") navigate("/search");
+          else if (v === "profile" && user) navigate(`/profile/${user.username}`);
         }}
       >
         <BottomNavigationAction value="feed" label="Home" icon={<HomeRoundedIcon />} />

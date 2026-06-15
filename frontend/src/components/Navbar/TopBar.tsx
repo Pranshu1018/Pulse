@@ -6,7 +6,7 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import { useTheme } from "@mui/material/styles";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { ProfileMenu } from "./ProfileMenu";
 import { useThemeMode } from "../../app/AppProviders";

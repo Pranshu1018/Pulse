@@ -1,20 +1,15 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Stack, TextField, Button, InputAdornment, IconButton, Typography, CircularProgress, Box,
 } from "@mui/material";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import { useState } from "react";
 import { AuthLayout } from "../layouts/AuthLayout";
 import { useAuth } from "../context/AuthContext";
 import { useNotify } from "../app/SnackbarProvider";
 
-export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Sign in · Social Spark" }, { name: "description", content: "Sign in to your Social Spark account." }] }),
-  component: LoginPage,
-});
-
-function LoginPage() {
+export function LoginPage() {
   const { login } = useAuth();
   const notify = useNotify();
   const navigate = useNavigate();
@@ -31,7 +26,7 @@ function LoginPage() {
     try {
       await login(email, pw);
       notify("Welcome back!", "success");
-      navigate({ to: "/feed" });
+      navigate("/feed");
     } catch (e2: unknown) {
       const msg = e2 instanceof Error ? e2.message : "Something went wrong";
       setErr(msg);
@@ -65,20 +60,13 @@ function LoginPage() {
               ),
             }}
           />
-          <Button
-            type="submit"
-            variant="contained"
-            size="large"
-            disabled={loading}
-            startIcon={loading ? <CircularProgress size={18} color="inherit" /> : null}
-          >
+          <Button type="submit" variant="contained" size="large" disabled={loading}
+            startIcon={loading ? <CircularProgress size={18} color="inherit" /> : null}>
             {loading ? "Signing in…" : "Sign in"}
           </Button>
           <Typography variant="body2" color="text.secondary" align="center">
             Don't have an account?{" "}
-            <Link to="/signup" style={{ color: "var(--mui-palette-primary-main)", fontWeight: 700, textDecoration: "none" }}>
-              Create one
-            </Link>
+            <Link to="/signup" style={{ color: "inherit", fontWeight: 700 }}>Create one</Link>
           </Typography>
         </Stack>
       </Box>

@@ -4,7 +4,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { useState, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import { useDebouncedValue } from "../../hooks/useDebouncedValue";
 import { searchUsers } from "../../services/users";
 import { searchPosts } from "../../services/posts";
@@ -53,10 +53,7 @@ export function SearchBar() {
             onChange={(e) => { setQ(e.target.value); setOpen(true); }}
             onFocus={() => setOpen(true)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                navigate({ to: "/search", search: { q } as never });
-                setOpen(false);
-              }
+              if (e.key === "Enter") { navigate(`/search?q=${q}`); setOpen(false); }
             }}
             sx={{ flex: 1, fontSize: 14 }}
           />
@@ -70,13 +67,7 @@ export function SearchBar() {
             </Tabs>
             <Box sx={{ maxHeight: 320, overflow: "auto" }}>
               {tab === "users" && (usersQ.data?.length ? usersQ.data.map((u) => (
-                <ListItemButton
-                  key={u.id}
-                  onClick={() => {
-                    navigate({ to: "/profile/$username", params: { username: u.username } });
-                    setOpen(false);
-                  }}
-                >
+                <ListItemButton key={u.id} onClick={() => { navigate(`/profile/${u.username}`); setOpen(false); }}>
                   <Stack direction="row" spacing={1.5} alignItems="center">
                     <UserAvatar src={u.avatar} name={u.name} size={36} />
                     <Box>
@@ -88,7 +79,7 @@ export function SearchBar() {
               )) : <Typography sx={{ p: 2 }} color="text.secondary" variant="body2">No people found.</Typography>)}
 
               {tab === "posts" && (postsQ.data?.length ? postsQ.data.map((p) => (
-                <ListItemButton key={p.id} onClick={() => { navigate({ to: "/feed" }); setOpen(false); }}>
+                <ListItemButton key={p.id} onClick={() => { navigate("/feed"); setOpen(false); }}>
                   <Stack direction="row" spacing={1.5} alignItems="flex-start">
                     <UserAvatar src={p.author.avatar} name={p.author.name} size={32} />
                     <Box sx={{ minWidth: 0 }}>
